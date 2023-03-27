@@ -1,0 +1,51 @@
+import requests
+import json
+
+# Enter your OpenWeatherMap API key here
+api_key = "YOUR_API_KEY"
+
+# Enter your location's latitude and longitude
+lat = "YOUR_LATITUDE"
+lon = "YOUR_LONGITUDE"
+
+# Make API call to OpenWeatherMap
+url = f"https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={api_key}&units=metric"
+response = requests.get(url)
+
+# Parse response as JSON
+weather_data = json.loads(response.text)
+
+# Extract weather information
+temp = weather_data["main"]["temp"]
+condition = weather_data["weather"][0]["main"]
+
+# Define dictionary of clothing items and their suggested conditions
+clothes_dict = {
+    "T-shirt": ["Clear", "Clouds"],
+    "Jeans": ["Clear", "Clouds", "Rain"],
+    "Sneakers": ["Clear", "Clouds"],
+    "Raincoat": ["Rain"]
+}
+
+# Define dictionary of current fashion trends
+trends_dict = {
+    "T-shirt": ["graphic tees", "oversized shirts"],
+    "Jeans": ["high-waisted jeans", "distressed denim"],
+    "Sneakers": ["chunky sneakers", "retro styles"],
+    "Raincoat": ["bright colors", "translucent materials"]
+}
+
+# Create list of clothing suggestions based on weather and fashion trends
+suggestions = []
+for item, conditions in clothes_dict.items():
+    if condition in conditions:
+        suggestions.append(item)
+        if item in trends_dict:
+            suggestions.append("Try a " + trends_dict[item][0])
+        else:
+            suggestions.append("Wear something comfortable and weather-appropriate")
+
+# Print clothing suggestions
+print("Based on the weather in your location, you should wear:")
+for suggestion in suggestions:
+    print("- " + suggestion)
